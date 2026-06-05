@@ -1,0 +1,107 @@
+{
+  "entities": {
+    "profiles": {
+      "title": "Perfis de Usuário",
+      "description": "Armazena informações de médicos e atendentes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "format": "uuid", "description": "ID único do usuário" },
+        "name": { "type": "string", "description": "Nome completo" },
+        "email": { "type": "string", "format": "email", "description": "E-mail institucional" },
+        "role": { "type": "string", "enum": ["doctor", "attendant"], "description": "Perfil de acesso" },
+        "specialty_id": { "type": "string", "format": "uuid", "description": "ID da especialidade (apenas para médicos)" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "doctors": {
+      "title": "Médicos",
+      "description": "Tabela dedicada para informações dos médicos.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "format": "uuid", "description": "ID único do médico" },
+        "name": { "type": "string", "description": "Nome completo" },
+        "email": { "type": "string", "format": "email", "description": "E-mail profissional" },
+        "crm": { "type": "string", "description": "Registro CRM" },
+        "phone": { "type": "string", "description": "Telefone de contato" },
+        "specialty_id": { "type": "string", "format": "uuid", "description": "ID da especialidade" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "email", "crm", "specialty_id"]
+    },
+    "specialties": {
+      "title": "Especialidades Médicas",
+      "description": "Lista de especialidades oferecidas pela clínica.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "name": { "type": "string", "description": "Nome da especialidade" }
+      },
+      "required": ["id", "name"]
+    },
+    "patients": {
+      "title": "Pacientes",
+      "description": "Cadastro de pacientes da clínica.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "CPF do paciente (apenas números)" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "birth_date": { "type": "string", "format": "date" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "phone"]
+    },
+    "appointments": {
+      "title": "Consultas",
+      "description": "Registro de agendamentos de consultas.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "doctor_id": { "type": "string", "format": "uuid" },
+        "patient_id": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "time": { "type": "string", "description": "Horário da consulta (HH:mm)" },
+        "status": { "type": "string", "enum": ["scheduled", "confirmed", "cancelled", "completed"] },
+        "notes": { "type": "string", "description": "Observações clínicas" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "doctor_id", "patient_id", "date", "time", "status"]
+    },
+    "doctor_availability": {
+      "title": "Disponibilidade Médica",
+      "description": "Configurações de horários de atendimento dos médicos.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "doctor_id": { "type": "string", "format": "uuid" },
+        "day_of_week": { "type": "string", "enum": ["seg", "ter", "qua", "qui", "sex", "sab", "dom"] },
+        "active": { "type": "boolean" },
+        "slots": { "type": "array", "description": "Array of {start: HH:mm, end: HH:mm}" }
+      },
+      "required": ["doctor_id", "day_of_week", "active"]
+    },
+    "doctor_exceptions": {
+      "title": "Exceções Médicas",
+      "description": "Datas específicas em que o médico não atenderá.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "doctor_id": { "type": "string", "format": "uuid" },
+        "date": { "type": "string", "format": "date" },
+        "reason": { "type": "string" }
+      },
+      "required": ["doctor_id", "date"]
+    }
+  },
+  "firestore": {
+    "/profiles/{id}": { "schema": "profiles", "description": "Perfis de usuários" },
+    "/doctors/{id}": { "schema": "doctors", "description": "Tabela de médicos" },
+    "/doctor_availability/{id}": { "schema": "doctor_availability", "description": "Disponibilidade de médicos" },
+    "/doctor_exceptions/{id}": { "schema": "doctor_exceptions", "description": "Exceções de disponibilidade" },
+    "/specialties/{id}": { "schema": "specialties", "description": "Especialidades médicas" },
+    "/patients/{id}": { "schema": "patients", "description": "Cadastro de pacientes" },
+    "/appointments/{id}": { "schema": "appointments", "description": "Agendamentos de consultas" }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ClinicaMed - Sistema de Gestão Médica",
+  "description": "Sistema completo para gestão de clínicas médicas com perfis de Médico e Atendente, controle de agenda e prontuário simplificado.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
