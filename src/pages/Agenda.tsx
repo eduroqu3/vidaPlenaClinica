@@ -161,7 +161,7 @@ const AgendaPage = () => {
 
         <Card className="border-none shadow-sm bg-white rounded-2xl overflow-hidden">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">Resumo do</CardTitle>
+            <CardTitle className="text-lg font-bold">Resumo do Dia</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between text-sm">
