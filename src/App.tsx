@@ -89,7 +89,7 @@ function AppContent() {
               onClick={stopImpersonating}
               className="bg-white text-slate-900 hover:bg-slate-50 active:scale-95 px-3 py-1 rounded-lg font-black text-[10px] uppercase tracking-wide cursor-pointer transition-all shadow-sm shrink-0 border border-transparent"
             >
-              Voltar para Painel
+              Voltar para Painel Admin
             </button>
           </div>
         )}
