@@ -2,20 +2,6 @@
 
 Este é um sistema web completo para gestão de clínicas médicas, desenvolvido com React, Express, Tailwind CSS e Supabase.
 
-## 🚀 Funcionalidades
-
-### Perfil Médico
-- **Dashboard**: Visão geral das consultas do dia e indicadores.
-- **Minha Agenda**: Calendário interativo para gerenciar atendimentos.
-- **Atendimento**: Registro de observações clínicas e finalização de consultas.
-- **Histórico**: Acesso aos atendimentos realizados.
-
-### Perfil Atendente (Recepção)
-- **Dashboard**: Indicadores operacionais da clínica.
-- **Agendamentos**: Marcação, remarcação e cancelamento de consultas.
-- **Pacientes**: Cadastro completo e busca de pacientes.
-- **Médicos**: Gestão do corpo clínico e especialidades.
-
 ## 🛠️ Tecnologias
 
 - **Frontend**: React 19, Vite, Tailwind CSS, Lucide Icons, Motion.
@@ -36,10 +22,6 @@ Para que o sistema funcione com dados reais, você precisa configurar o Supabase
 VITE_SUPABASE_URL="sua-url-do-supabase"
 VITE_SUPABASE_ANON_KEY="sua-chave-anon-do-supabase"
 ```
-
-## 🔑 Acesso ao Sistema
-
-O sistema não possui tela de login por padrão. Para alternar entre os perfis de **Médico** e **Atendente**, utilize o seletor localizado na parte inferior do menu lateral (Sidebar).
 
 ## 📁 Estrutura do Projeto
 
