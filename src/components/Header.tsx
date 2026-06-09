@@ -95,6 +95,7 @@ const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
     refreshData,
     session,
     patients,
+    addPatient,
     impersonate,
     stopImpersonating,
     originalAdminSession
@@ -103,6 +104,7 @@ const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
   const [isAddDoctorOpen, setIsAddDoctorOpen] = useState(false);
   const [isAddAttendantOpen, setIsAddAttendantOpen] = useState(false);
+  const [isAddPatientOpen, setIsAddPatientOpen] = useState(false);
   const [editingDoc, setEditingDoc] = useState<any>(null);
   const [editingAtt, setEditingAtt] = useState<any>(null);
   const [confirmDeleteDocId, setConfirmDeleteDocId] = useState<string | null>(null);
@@ -223,6 +225,29 @@ const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
         cpf: cpf,
       });
       setEditingAtt(null);
+    } catch (error) {
+      // Já tratado
+    }
+  };
+
+  const handleAddPatient = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const cpf = formData.get('cpf') as string;
+    try {
+      const cleanCpf = cpf ? cpf.replace(/\D/g, '') : '';
+      if (cleanCpf.length !== 11) {
+        toast.error('CPF inválido. Deve conter 11 números.');
+        return;
+      }
+      await addPatient({
+        id: cleanCpf,
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        phone: formData.get('phone') as string,
+        birth_date: formData.get('birth_date') as string,
+      });
+      setIsAddPatientOpen(false);
     } catch (error) {
       // Já tratado
     }
@@ -603,33 +628,42 @@ const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
                     )}
                   </div>
 
-                  {activeTab !== 'patient' && (
-                    <div className="border-t border-slate-100 dark:border-slate-800 mt-2.5 pt-2 shrink-0">
-                      {activeTab === 'doctor' ? (
-                        <button
-                          onClick={() => {
-                            setIsAddDoctorOpen(true);
-                            setIsSwitcherOpen(false);
-                          }}
-                          className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-[#028090] hover:bg-slate-50 dark:hover:bg-slate-900 border border-dashed border-slate-200 dark:border-[#111c24] transition-all cursor-pointer"
-                        >
-                          <Plus size={11} className="stroke-[2.5]" />
-                          Novo Médico
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            setIsAddAttendantOpen(true);
-                            setIsSwitcherOpen(false);
-                          }}
-                          className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-[#028090] hover:bg-slate-50 dark:hover:bg-slate-900 border border-dashed border-slate-200 dark:border-[#111c24] transition-all cursor-pointer"
-                        >
-                          <Plus size={11} className="stroke-[2.5]" />
-                          Novo Atendente
-                        </button>
-                      )}
-                    </div>
-                  )}
+                  <div className="border-t border-slate-100 dark:border-slate-800 mt-2.5 pt-2 shrink-0">
+                    {activeTab === 'doctor' ? (
+                      <button
+                        onClick={() => {
+                          setIsAddDoctorOpen(true);
+                          setIsSwitcherOpen(false);
+                        }}
+                        className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-[#028090] hover:bg-slate-50 dark:hover:bg-slate-900 border border-dashed border-slate-200 dark:border-[#111c24] transition-all cursor-pointer"
+                      >
+                        <Plus size={11} className="stroke-[2.5]" />
+                        Novo Médico
+                      </button>
+                    ) : activeTab === 'attendant' ? (
+                      <button
+                        onClick={() => {
+                          setIsAddAttendantOpen(true);
+                          setIsSwitcherOpen(false);
+                        }}
+                        className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-[#028090] hover:bg-slate-50 dark:hover:bg-slate-900 border border-dashed border-slate-200 dark:border-[#111c24] transition-all cursor-pointer"
+                      >
+                        <Plus size={11} className="stroke-[2.5]" />
+                        Novo Atendente
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setIsAddPatientOpen(true);
+                          setIsSwitcherOpen(false);
+                        }}
+                        className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-[#028090] hover:bg-slate-50 dark:hover:bg-slate-900 border border-dashed border-slate-200 dark:border-[#111c24] transition-all cursor-pointer"
+                      >
+                        <Plus size={11} className="stroke-[2.5]" />
+                        Novo Paciente
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -1287,6 +1321,62 @@ const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
               </DialogFooter>
             </form>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* MODAL: CRIAR NOVO PACIENTE */}
+      <Dialog open={isAddPatientOpen} onOpenChange={setIsAddPatientOpen}>
+        <DialogContent className="sm:max-w-[400px] rounded-2xl bg-white dark:bg-[#111c24] w-[95vw] sm:w-full border dark:border-slate-800 font-sans">
+          <DialogHeader className="text-slate-900 dark:text-slate-100">
+            <DialogTitle>Criar Novo Paciente</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleAddPatient} className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="hdr-pat-name" className="text-slate-700 dark:text-slate-300">Nome do Paciente</Label>
+              <Input id="hdr-pat-name" name="name" placeholder="Ex: Maria Silva" required className="rounded-xl custom-input-theme" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="hdr-pat-cpf" className="text-slate-700 dark:text-slate-300">CPF</Label>
+              <Input 
+                id="hdr-pat-cpf" 
+                name="cpf" 
+                placeholder="000.000.000-00" 
+                required
+                className="rounded-xl custom-input-theme"
+                onChange={(e) => e.target.value = maskCPF(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="hdr-pat-email" className="text-slate-700 dark:text-slate-300">E-mail</Label>
+              <Input id="hdr-pat-email" name="email" type="email" placeholder="maria@email.com" required className="rounded-xl custom-input-theme" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="hdr-pat-phone" className="text-slate-700 dark:text-slate-300">Telefone</Label>
+              <Input 
+                id="hdr-pat-phone" 
+                name="phone" 
+                placeholder="(11) 99999-9999" 
+                required 
+                className="rounded-xl custom-input-theme"
+                onChange={(e) => e.target.value = maskPhone(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="hdr-pat-birth_date" className="text-slate-700 dark:text-slate-300">Data de Nascimento</Label>
+              <Input 
+                id="hdr-pat-birth_date" 
+                name="birth_date" 
+                type="date"
+                required 
+                className="rounded-xl custom-input-theme"
+              />
+            </div>
+            <DialogFooter>
+              <Button type="submit" className="w-full bg-[#028090] hover:bg-[#00a896] text-white rounded-xl font-bold">
+                Criar e Acessar
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </>

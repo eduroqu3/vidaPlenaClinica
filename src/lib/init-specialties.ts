@@ -33,9 +33,12 @@ export const initSpecialties = async () => {
     }
 
     const existingNames = existing?.map(s => s.name) || [];
-    const toInsert = REQUIRED_SPECIALTIES.filter(name => !existingNames.includes(name));
 
-    if (toInsert.length > 0) {
+    // ONLY automatically seed standard specialties if the table is completely empty.
+    // If the database already has at least one specialty, we assume the database is initialized
+    // and the user should be free to delete any default specialties without them returning.
+    if (existingNames.length === 0) {
+      const toInsert = REQUIRED_SPECIALTIES;
       const { error: insertError } = await supabase
         .from('specialties')
         .insert(toInsert.map(name => ({ name })));
@@ -52,7 +55,7 @@ export const initSpecialties = async () => {
       return { success: true, message: `${toInsert.length} novas especialidades cadastradas!`, updated: true };
     }
 
-    return { success: true, message: 'Conexão OK e especialidades já estão atualizadas.', updated: false };
+    return { success: true, message: 'Conexão OK e especialidades já estão configuradas.', updated: false };
   } catch (error: any) {
     console.error('Error initializing specialties:', error);
     return { success: false, message: `Erro na inicialização: ${error.message}`, error };
