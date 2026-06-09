@@ -43,7 +43,7 @@ VITE_SUPABASE_ANON_KEY="sua-chave-anon-do-supabase"
 
 ## 🔑 Acesso ao Sistema
 
-O sistema não possui tela de login por padrão. Para alternar entre os perfis de **Médico** e **Atendente**, utilize o seletor localizado na parte inferior do menu lateral (Sidebar).
+O sistema possui tela de login. Para acessar o sistema da clínica seja paciente ou funcionario.
 
 ## 📁 Estrutura do Projeto
 
