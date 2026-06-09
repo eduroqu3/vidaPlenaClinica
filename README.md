@@ -1,4 +1,4 @@
-# ClinicaMed - Sistema de Gestão Médica
+# VidaPlena - Sistema de Gestão Médica
 
 Este é um sistema web completo para gestão de clínicas médicas, desenvolvido com React, Express, Tailwind CSS e Supabase.
 
